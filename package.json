@@ -1,0 +1,24 @@
+{
+  "name": "PageBench",
+  "version": "1.0.0",
+  "description": "A webpage benchmarking tool built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fbradley8/pagebench.git"
+  },
+  "author": "fbradley8",
+  "bugs": {
+    "url": "https://github.com/fbradley8/pagebench/issues"
+  },
+  "homepage": "https://github.com/fbradley8/pagebench#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^1.1.2"
+  },
+  "dependencies": {
+    "jquery": "^2.2.4"
+  }
+}

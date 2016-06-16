@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>PageBench</title>
+
+		<link rel="stylesheet" href="./css/bootstrap.min.css">
+		<link rel="stylesheet" href="./css/font-awesome.min.css">
+		<link rel="stylesheet" href="./css/chartist.min.css">
+		<link rel="stylesheet" href="./css/main.css">
+
+
+		<script>
+			window.$ = window.jQuery = require('jquery');
+		</script>
+
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/pagebench.js"></script>
+		<script src="./js/chartist.min.js"></script>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-fixed-top navbar-inverse">
+			<div class="container">
+				<div id="window-title">PageBench</div>
+				<div id="window-actions">
+					<ul id="window-action-buttons">
+						<li id="window-minimize"><i class="fa fa-minus"></i></li>
+						<li id="window-close"><i class="fa fa-close"></i></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div id="window-content">
+
+			<div id="new-test-form" style="display: none;">
+				<div class="arrow"></div>
+				<div class="form-horizontal">
+					<div class="form-group form-group-sm">
+						<label for="form-url" class="col-xs-4 control-label">Target URL</label>
+						<div class="col-xs-8">
+							<input id="form-url" class="form-control" type="text" placeholder="http://www.example.com">
+							<p id="form-url-error" class="text-danger" style="display: none;">Please enter a target URL</p>
+						</div>
+					</div>
+					<div class="form-group form-group-sm">
+						<label for="form-tests" class="col-xs-4 control-label">Number of tests</label>
+						<div class="col-xs-8">
+							<input id="form-tests" class="form-control" type="text" placeholder="10 (Default)">
+							<p id="form-tests-error" class="text-danger" style="display: none;">Please enter a number</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-8 col-xs-push-4">
+							<button id="form-start" class="btn btn-block btn-primary">Start</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="left-pane">
+				<a href="#" id="new-test-btn"><i class="fa fa-plus"></i> New Test</a>
+
+				<hr>
+
+				<div id="tests">
+					<span id="title-tests-queued" class="section-title" style="display: none;">Queued</span>
+					<ul id="tests-queued"></ul>
+
+					<span id="title-tests-completed" class="section-title" style="display: none;">Completed</span>
+					<ul id="tests-completed"></ul>
+				</div>
+				
+				<div id="resize-bar"></div>
+			</div>
+
+			<div id="center-pane" data-tab="test-view">
+				<div id="test-view">
+					<div id="test-status" data-status="idle">
+						<div id="status-idle">
+							To begin, click "New Test" in the Test Pane on the left.
+						</div>
+						<div id="status-running">
+							<b>Running test <span id="test-number"></span>/<span id="test-total"></span></b>
+							<button id="abort-testing" class="btn btn-danger btn-xs"><i class="fa fa-hand-stop"></i> Abort Testing</button>
+						</div>
+						<div id="status-completed">
+							<b>Test complete. Average Load Time: <span id="current-test-result-average"></span>ms</b>
+							<button id="view-results" class="btn btn-default btn-xs">View Results</button>
+						</div>
+					</div>
+					<webview></webview>
+				</div>
+				<div id="results-view">
+					<p><b>Average Load Time: <span id="test-result-average"></span>ms</b></p>
+					<div>Tests Performed: <span id="test-result-performed"></span></div>
+					<div>Tests Succeeded: <span id="test-result-succeeded"></span></div>
+					<div>Tests Failed: <span id="test-result-failed"></span></div>
+					<br>
+					<div id="test-result-chart"></div>
+					<!-- <a id="show-individual-results" href="#">Show individual test results</a> -->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

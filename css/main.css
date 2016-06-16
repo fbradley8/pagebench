@@ -1,0 +1,255 @@
+html,
+body {
+  overflow: hidden;
+  -webkit-user-select: none; /* prevents selecting */
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+body {
+  padding-top: 30px;
+}
+
+webview {
+	height: calc(100% - 40px);
+}
+
+button,
+li {
+	-webkit-app-region: no-drag;
+}
+
+a,
+button.btn {
+	cursor: default;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+.navbar-fixed-top {
+	-webkit-app-region: drag;
+	height: 30px;
+	min-height: 0;
+	margin-bottom: 0;
+}
+
+#window-title {
+	position: absolute;
+	top: 5px;
+	left: 0;
+	right: 0;
+	text-align: center;
+	color: #fff;
+}
+#window-content {
+	position: absolute;
+	top: 30px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+#window-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #fff;
+}
+#window-action-buttons {
+	list-style: none;
+	padding: 5px 5px 0;
+	margin-bottom: 0;
+}
+#window-action-buttons li {
+	display: inline-block;
+	height: 20px;
+	width: 30px;
+	line-height: 20px;
+	text-align: center;
+	color: #cccccc;
+	overflow: hidden;
+}
+#window-action-buttons #window-close {
+	color: #fff;
+	background-color: #ad0000;
+}
+#window-action-buttons #window-close:hover {
+	background-color: #d00000;
+}
+#window-action-buttons #window-minimize i {
+	line-height: 30px;
+}
+#window-action-buttons #window-minimize:hover {
+	color: #fff;
+}
+
+#resize-bar {
+	border-right: 1px solid #d3d3d3;
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 5px;
+	cursor: ew-resize;
+}
+#left-pane {
+	display: flex;
+	flex-direction: column;
+	float: left;
+	padding: 15px;
+	/*border-right: 1px solid #d3d3d3;*/
+	height: 100%;
+	width: 200px;
+	overflow: hidden;
+	position: relative;
+}
+#center-pane {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	position: relative;
+}
+
+#new-test-form {
+	position: absolute;
+	top: 40px;
+	left: 10px;
+	width: 400px;
+	background-color: white;
+	box-shadow: 0px 0px 8px 0px gray;
+	padding: 10px;
+	z-index: 100000;
+}
+#new-test-form .col-xs-8,
+#new-test-form .col-xs-4 {
+	padding-left: 0;
+}
+#new-test-form .control-label {
+    padding-top: 6px;
+    font-size: 12px;
+    text-align: right;
+}
+
+.arrow,
+.arrow:after {
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+	top: -12px;
+	margin-left: -5px;
+	border-bottom-color: #999;
+	border-bottom-color: rgba(0,0,0,.25);
+	border-top-width: 0;
+	border-width: 6px;
+}
+.arrow:after {
+	content: "";
+	border-width: 5px;
+	top: 1px;
+	margin-left: -5px;
+	border-top-width: 0;
+	border-bottom-color: #fff;
+}
+
+button,
+.form-control {
+	border-radius: 0!important;
+}
+.form-group {
+	margin-bottom: 5px;
+}
+.form-group:last-of-type {
+	margin-bottom: 0;
+}
+.section-title {
+	color: #757575;
+}
+#tests ul {
+	margin-top: 5px;
+	list-style-type: none;
+	padding-left: 0;
+}
+#tests ul li {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin: 0 -15px;
+	padding: 3px 15px;
+}
+#tests ul li:hover {
+	color: black;
+}
+#tests ul li.selected {
+	background-color: #efefef;
+}
+#tests-queued li {
+	padding-left: 35px!important;
+}
+#tests-queued li .fa-stack {
+	display: none!important;
+	position: absolute!important;
+	margin-left: -18px!important;
+	margin-top: -4px!important;
+}
+#tests-queued li:first-child .fa-stack {
+	display: inline-block!important;
+}
+#tests-queued li:not(:first-child) {
+	padding-left: 34px;
+}
+
+#test-status {
+	padding: 10px;
+	border-bottom: 1px solid #d3d3d3;
+	height: 40px;
+}
+
+/* Test Status */
+#test-status > div {
+	display: none;
+}
+[data-status="idle"] #status-idle,
+[data-status="running"] #status-running,
+[data-status="completed"] #status-completed {
+	display: block;
+}
+#test-status button {
+	margin-top: -1px;
+	padding: 1px 7px;
+	position: absolute;
+	right: 10px;
+	border-radius: 3px!important;
+}
+
+/* Tabs */
+#test-view,
+#results-view {
+	display: none;
+}
+[data-tab="test-view"] #test-view,
+[data-tab="results-view"] #results-view {
+	display: block;
+	height: 100%;
+}
+#results-view {
+	padding: 15px;
+}
+
+/* Theme */
+hr {
+	margin: 10px 0;
+}
+.btn {
+	outline: none!important;
+}
+.fa-stack {
+	width: 1em;
+	height: 1em;
+}
+.fa-play {
+	font-size: 8px;
+	margin-left: 1px;
+}
