@@ -4,13 +4,15 @@
   "description": "A webpage benchmarking tool built with Electron",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "build": "node build.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fbradley8/pagebench.git"
   },
   "author": "fbradley8",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/fbradley8/pagebench/issues"
   },

@@ -39,10 +39,10 @@ $(document).ready(function() {
 		})
 	});
 	$(document).mouseup(function (e) {
-			$(document).unbind('mousemove');
+		$(document).unbind('mousemove');
 	});
 	$('#form-url, #form-tests').keypress(function (e) {
-		if (e.which == 13) {
+		if (e.which == 13) { // Return/Enter
 			$('#form-start').click();
 			return false;
 		}
