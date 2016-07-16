@@ -9,6 +9,7 @@ $(document).ready(function() {
 		lastResult: 0,
 		lastFailed: false,
 		loadTimes: [],
+		blockList: [],
 		results: {
 			averageLoadTime: 0,
 			testsPerformed: 0,
@@ -18,11 +19,13 @@ $(document).ready(function() {
 	};
 	var queuedTests = [];
 	var completedTests = [];
-	var webview = $('webview');
+	var scanner = $('webview#scanner');
+	var tester = $('webview#tester');
 	var failTimer;
 	var sidebarMin = 200;
 	var sidebarMax = 600;
 	var centerMin = 600;
+	const {ipcRenderer} = require('electron');
 	const remote = require('electron').remote;
 
 	// Event Handlers
@@ -49,8 +52,23 @@ $(document).ready(function() {
 	});
 	$('#new-test-btn').on('click', function(e) {
 		$('#new-test-form').show();
+		$('#show-advanced').show();
+		$('.removeme').remove();
+		$('#form-advanced').hide();
+		$('#blockable-items').empty();
+		$('#scanning-page').hide();
 		$('#form-url').focus();
 		e.stopPropagation();
+	});
+	$('#show-advanced').on('click', function(e) {
+		$(this).hide();
+		$('#scanning-page').show();
+		$('#form-advanced').show();
+		var scanUrl = $('#form-url').val();
+		if (scanUrl.indexOf('http') == -1) {
+			scanUrl = 'http://' + scanUrl;
+		}
+		scanner.attr('src', scanUrl);
 	});
 	$('#new-test-form').on('click', function(e) {
 		$(this).show();
@@ -59,7 +77,7 @@ $(document).ready(function() {
 	$(document).on('click', function(e) {
 		$('#new-test-form').hide();
 	});
-	$('webview').on('mouseup', function() { 
+	tester.on('mouseup', function() { 
 		$('#new-test-form').hide();
 	});
 	$('#window-close').on('click', function(e) {
@@ -90,10 +108,11 @@ $(document).ready(function() {
 		loadResults(completedTests.length - 1);
 	});
 	$('#abort-testing').on('click', function(e) {
+		clearTimeout(failTimer);
 		test.remaining = 0;
 		test.isRunning = false;
 		queuedTests = [];
-		webview.attr('src', 'about:blank');
+		tester.attr('src', 'about:blank');
 		updateQueue();
 		$('#test-status').attr('data-status', 'idle');
 	});
@@ -104,17 +123,33 @@ $(document).ready(function() {
 			var newTest = {
 				total: parseInt($('#form-tests').val()) || 10,
 				url: $('#form-url').val(),
+				blockList: []
 			}
+			$('#blockable-items input').each(function(index, item) {
+				if (item.checked) {
+					newTest.blockList.push(item.value);
+				}
+			});
 			queuedTests.push(newTest);
 			updateQueue();
 		}
 	});
-	webview[0].addEventListener('did-finish-load', loadstop);
+	ipcRenderer.on('payload', function(data){
+	    console.log(data);
+	});
+	tester[0].addEventListener('did-finish-load', loadstop);
+	scanner[0].addEventListener('dom-ready', function() {
+		scanner[0].executeJavaScript("analyzePage()", false);
+	});
+	scanner[0].addEventListener('ipc-message', (event) => {
+		console.log(JSON.parse(event.channel));
+		loadScannerResults(JSON.parse(event.channel));
+	});
 
 	function loadstop() {
 		if (test.isRunning && !test.lastFailed) {
 			clearTimeout(failTimer);
-			webview[0].executeJavaScript("JSON.stringify(window.performance.timing)", false, function(result) {
+			tester[0].executeJavaScript("JSON.stringify(window.performance.timing)", false, function(result) {
 				test.lastResult = getLoadTime(JSON.parse(result));
 				test.loadTimes.push(test.lastResult);
 				runTest();
@@ -139,6 +174,13 @@ $(document).ready(function() {
 				testsSucceeded: 0,
 				testsFailed: 0
 			};
+			test.blockList = queuedTests[0].blockList;
+			var patterns = [];
+			for (var i = 0; i < test.blockList.length; i++) {
+				console.log(db[test.blockList[i]-1]);
+				patterns.push(db[test.blockList[i]-1].pattern);
+			}
+			ipcRenderer.send('blockList', patterns);
 			runTest();
 		}
 		// else there isn't anything left in the queue
@@ -148,7 +190,7 @@ $(document).ready(function() {
 		if (test.remaining > 0) {
 			test.number += 1;
 			test.remaining -= 1;
-			webview.attr('src', test.url);
+			tester.attr('src', test.url);
 			failTimer = setTimeout(failHandler, 15000);
 			test.lastFailed = false;
 		} else if (test.remaining == 0 && test.isRunning == true) {
@@ -210,6 +252,20 @@ $(document).ready(function() {
 		};
 
 		new Chartist.Line('#test-result-chart', data);
+	}
+
+	// Loads scan results from injectableScanner
+	function loadScannerResults(results) {
+		$('#scanning-page').hide();
+		var table = $('#blockable-items');
+		if (results.length) {
+			table.append('<thead><td>Block</td><td>Script Name</td></thead>')
+			for(var i = 0; i < results.length; i++) {
+				table.append('<tr><td><input type="checkbox" value="' + results[i].id + '"></td><td>' + results[i].name + '</td></tr>')
+			}
+		} else {
+			$('<p class="removeme text-center">No blockable items were found.</p>').insertAfter(table);
+		}
 	}
 
 	function updateStatus() {
@@ -280,6 +336,6 @@ $(document).ready(function() {
 		runTest();
 	}
 
-	// Init webview
-	webview.attr('src', 'about:blank');
+	// Init tester
+	tester.attr('src', 'about:blank');
 });

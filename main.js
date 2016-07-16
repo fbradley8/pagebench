@@ -1,4 +1,6 @@
-const {app, globalShortcut, BrowserWindow} = require('electron');
+const {app, globalShortcut, BrowserWindow, session, ipcMain} = require('electron');
+
+var blockList = [];
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -21,6 +23,38 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  const ses = mainWindow.webContents.session;
+
+  ses.webRequest.onBeforeRequest([], function(details, callback) {
+    if (blockList.length) {
+      for (var i = 0; i < blockList.length; i++) {
+        if (blockList[i].test(details.url)) {
+          callback({cancel: true});
+          return;
+        }
+      }
+      callback({cancel: false});
+    } else {
+      callback({cancel: false});
+    }
+  });
+
+  ipcMain.on('blockList', function(event, data){
+    blockList = [];
+    for (var i = 0; i < data.length; i++) {
+      var bug = data[i];
+      var matches = bug.match(/^\/(.+)\/(\w*)$/);
+      if (matches) {
+        var pattern = matches[1];
+        var attributes = matches[2];
+        if (attributes.length > 0)
+          blockList.push(new RegExp(pattern, attributes));
+        else
+          blockList.push(new RegExp(pattern));
+      }
+    }
+  });
 }
 
 app.commandLine.appendSwitch('disable-http-cache');
@@ -46,6 +80,3 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

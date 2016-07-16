@@ -121,14 +121,29 @@ a:hover {
 	padding: 10px;
 	z-index: 100000;
 }
-#new-test-form .col-xs-8,
-#new-test-form .col-xs-4 {
-	padding-left: 0;
-}
 #new-test-form .control-label {
     padding-top: 6px;
+    padding-right: 0;
     font-size: 12px;
     text-align: right;
+}
+
+#blockable-items {
+	margin-bottom: 5px;
+}
+
+#blockable-items tr td:first-child {
+	width: 1%;
+	text-align: center;
+}
+
+#blockable-items>tbody>tr>td,
+#blockable-items>tbody>tr>th,
+#blockable-items>tfoot>tr>td,
+#blockable-items>tfoot>tr>th,
+#blockable-items>thead>tr>td,
+#blockable-items>thead>tr>th {
+	padding: 4px;
 }
 
 .arrow,
@@ -252,4 +267,8 @@ hr {
 .fa-play {
 	font-size: 8px;
 	margin-left: 1px;
+}
+.progress {
+	height: 5px;
+	margin-bottom: 0;
 }
