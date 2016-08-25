@@ -21,7 +21,7 @@ Someday I'll package this into a fancy installer.
 To create a portable 64-bit Windows executable run:
 
 ```bash
-npm build
+npm run build
 ```
 
 The portable application will be created in pagebench\dist\PageBench-win32-x64. Everything in that folder is required for the exe to run. The exe itself is not portable.
